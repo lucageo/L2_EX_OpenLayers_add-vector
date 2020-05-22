@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html lang="en">
+  <head>
+    <title>OpenLayers example</title>
+	<script src="libraries/ol.js"></script>
+
+  </head>
+  <body>
+    <h2>My Map</h2>
+    <div id="myMap" style="width: 100%, height: 400px"></div>
+    
+    <script type="text/javascript">
+
+    // Geometries
+    var myPoint = new ol.geom.Point(
+        ol.proj.transform([13.060361, 47.787842], 'EPSG:4326', 'EPSG:3857')
+    );
+	
+	// Features
+    var myPointFeature = new ol.Feature(myPoint);
+
+	var vectorSource = new ol.source.Vector({
+		projection: 'EPSG:3857',
+		features: [myPointFeature]
+	});
+	
+	// Styles 
+	var style = new ol.style.Style({
+        // used to render polygons
+		fill: new ol.style.Fill({
+            color: 'rgba(255, 100, 50, 0.3)'
+        }),
+        // used to render lines
+		stroke: new ol.style.Stroke({
+            width: 2,
+            color: 'rgba(255, 100, 50, 0.8)'
+        }),
+        // used to render a point
+		image: new ol.style.Circle({
+            fill: new ol.style.Fill({
+                color: 'rgba(250, 90, 90, 1)'
+            }),
+            //outline
+			stroke: new ol.style.Stroke({
+                width: 1,
+                color: 'rgba(0, 0, 0, 1)'
+            }),
+            radius: 5
+        })
+	});
+
+	// layer
+	var vector_layer = new ol.layer.Vector({
+		source: vectorSource,
+		style: style
+	})
+
+	//map
+	var map = new ol.Map({
+		target: "myMap",
+		view: new ol.View({
+			center: ol.proj.transform([13.03,47.8], 'EPSG:4326', 'EPSG:3857'),
+			zoom: 4
+		})
+	});
+  
+	var osmBasemap = new ol.layer.Tile({source: new ol.source.OSM()});
+	map.addLayer(osmBasemap);
+	
+	map.addLayer(vector_layer);
+
+    </script>
+  </body>
+</html>
